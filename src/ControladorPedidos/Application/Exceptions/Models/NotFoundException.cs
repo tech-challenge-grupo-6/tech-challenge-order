@@ -1,4 +1,4 @@
-﻿namespace ControladorPedidos;
+﻿namespace ControladorPedidos.Application.Exceptions.Models;
 
 public class NotFoundException : Exception
 {

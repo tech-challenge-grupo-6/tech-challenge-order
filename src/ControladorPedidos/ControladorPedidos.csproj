@@ -27,21 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application/Clientes/Commands/" />
-    <Folder Include="Application/Clientes/Handlers/" />
-    <Folder Include="Application/Clientes/NotificationHandlers/" />
-    <Folder Include="Application/Clientes/Notifications/" />
-    <Folder Include="Application/Clientes/Queries/" />
-    <Folder Include="Application/Exceptions/Notifications/" />
     <Folder Include="Application/Exceptions/NotificationsHandler/" />
     <Folder Include="Application/Pedidos/Commands/" />
     <Folder Include="Application/Pedidos/Handlers/" />
-    <Folder Include="Application/Pedidos/NotificationHandlers/" />
     <Folder Include="Application/Pedidos/Notifications/" />
     <Folder Include="Application/Pedidos/Queries/" />
     <Folder Include="Application/Produtos/Commands/" />
     <Folder Include="Application/Produtos/Handlers/" />
-    <Folder Include="Application/Produtos/NotificationHandlers/" />
     <Folder Include="Application/Produtos/Notifications/" />
     <Folder Include="Application/Produtos/Queries/" />
     <Folder Include="Application/Shared/Models/Validators/" />

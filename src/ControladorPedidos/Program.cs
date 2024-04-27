@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using ControladorPedidos.Gateways.DependencyInjection;
 using ControladorPedidos.Infrastructure.Database.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -40,6 +41,7 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddHttpClient();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
