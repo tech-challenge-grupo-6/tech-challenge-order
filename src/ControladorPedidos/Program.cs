@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using ControladorPedidos.Gateways.DependencyInjection;
+using ControladorPedidos.Infrastructure.Configurations;
 using ControladorPedidos.Infrastructure.Database.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -42,6 +43,15 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddRepositories();
+
+var cacheConfiguration = CacheConfiguration.FromConfiguration(builder.Configuration);
+builder.Services.AddSingleton(cacheConfiguration);
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    string redisConfiguration = cacheConfiguration.Configuration;
+    options.Configuration = redisConfiguration;
+    options.InstanceName = "ControladorPedidos";
+});
 
 var app = builder.Build();
 
