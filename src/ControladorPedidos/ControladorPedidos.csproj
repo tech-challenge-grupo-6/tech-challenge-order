@@ -37,7 +37,6 @@
     <Folder Include="Application/Produtos/Notifications/" />
     <Folder Include="Application/Produtos/Queries/" />
     <Folder Include="Application/Shared/Models/Validators/" />
-    <Folder Include="Controllers/" />
   </ItemGroup>
 
 </Project>

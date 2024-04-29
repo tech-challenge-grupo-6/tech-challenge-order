@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
             []
         }
     });
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "ControladorPedidos.App.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "ControladorPedidos.xml"));
 });
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
