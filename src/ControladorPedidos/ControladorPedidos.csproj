@@ -29,10 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Application/Exceptions/NotificationsHandler/" />
-    <Folder Include="Application/Pedidos/Commands/" />
-    <Folder Include="Application/Pedidos/Handlers/" />
-    <Folder Include="Application/Pedidos/Notifications/" />
-    <Folder Include="Application/Pedidos/Queries/" />
     <Folder Include="Application/Shared/Models/Validators/" />
   </ItemGroup>
 

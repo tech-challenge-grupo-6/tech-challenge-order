@@ -1,5 +1,6 @@
 ﻿using ControladorPedidos.Application.Clientes.Notifications;
 using ControladorPedidos.Application.Exceptions.Notifications;
+using ControladorPedidos.Application.Pedidos.Notifications;
 using ControladorPedidos.Application.Produtos.Notifications;
 using MediatR;
 
@@ -11,7 +12,8 @@ public class LogNotificationHandler(ILogger<LogNotificationHandler> logger)
     INotificationHandler<CategoriaCriadaNotification>,
     INotificationHandler<ProdutoCriadoNotification>,
     INotificationHandler<ProdutoEditadoNotification>,
-    INotificationHandler<ProdutoRemovidoNotification>
+    INotificationHandler<ProdutoRemovidoNotification>,
+    INotificationHandler<PedidoCadastradoNotification>
 
 {
     public Task Handle(ExceptionNotification notification, CancellationToken cancellationToken)
@@ -48,6 +50,12 @@ public class LogNotificationHandler(ILogger<LogNotificationHandler> logger)
     public Task Handle(ProdutoRemovidoNotification notification, CancellationToken cancellationToken)
     {
         logger.LogInformation("Produto removido: {Produto}", notification);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(PedidoCadastradoNotification notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Pedido cadastrado: {Pedido}", notification);
         return Task.CompletedTask;
     }
 }

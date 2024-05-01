@@ -12,8 +12,9 @@ public class Pedido : EntityBase
     public virtual ICollection<Produto> Produtos { get; set; } = null!;
     public double ValorTotal { get; set; }
 
-    public void CalcularValorTotal()
+    public double CalcularValorTotal()
     {
         ValorTotal = Produtos.Sum(p => p.Preco);
+        return ValorTotal;
     }
 }
