@@ -33,10 +33,6 @@
     <Folder Include="Application/Pedidos/Handlers/" />
     <Folder Include="Application/Pedidos/Notifications/" />
     <Folder Include="Application/Pedidos/Queries/" />
-    <Folder Include="Application/Produtos/Commands/" />
-    <Folder Include="Application/Produtos/Handlers/" />
-    <Folder Include="Application/Produtos/Notifications/" />
-    <Folder Include="Application/Produtos/Queries/" />
     <Folder Include="Application/Shared/Models/Validators/" />
   </ItemGroup>
 

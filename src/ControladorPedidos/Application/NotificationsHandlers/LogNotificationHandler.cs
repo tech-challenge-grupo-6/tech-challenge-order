@@ -1,12 +1,17 @@
 ﻿using ControladorPedidos.Application.Clientes.Notifications;
 using ControladorPedidos.Application.Exceptions.Notifications;
+using ControladorPedidos.Application.Produtos.Notifications;
 using MediatR;
 
 namespace ControladorPedidos.Application.NotificationHandlers;
 
 public class LogNotificationHandler(ILogger<LogNotificationHandler> logger)
     : INotificationHandler<ExceptionNotification>,
-    INotificationHandler<ClienteCriadoNotification>
+    INotificationHandler<ClienteCriadoNotification>,
+    INotificationHandler<CategoriaCriadaNotification>,
+    INotificationHandler<ProdutoCriadoNotification>,
+    INotificationHandler<ProdutoEditadoNotification>,
+    INotificationHandler<ProdutoRemovidoNotification>
 
 {
     public Task Handle(ExceptionNotification notification, CancellationToken cancellationToken)
@@ -19,6 +24,30 @@ public class LogNotificationHandler(ILogger<LogNotificationHandler> logger)
     {
 
         logger.LogInformation("Cliente criado: {Cliente}", notification);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(CategoriaCriadaNotification notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Categoria criada: {Categoria}", notification);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(ProdutoCriadoNotification notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Produto criado: {Produto}", notification);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(ProdutoEditadoNotification notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Produto editado: {Produto}", notification);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(ProdutoRemovidoNotification notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Produto removido: {Produto}", notification);
         return Task.CompletedTask;
     }
 }

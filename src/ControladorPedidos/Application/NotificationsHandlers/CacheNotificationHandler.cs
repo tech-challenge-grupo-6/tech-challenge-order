@@ -8,6 +8,12 @@ public class CacheNotificationHandler(IDistributedCache cache) : INotificationHa
 {
     public async Task Handle(CacheNotification notification, CancellationToken cancellationToken)
     {
-        await cache.SetStringAsync(notification.Key, notification.Value, cancellationToken);
+        var (key, value) = notification;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            await cache.RemoveAsync(key, cancellationToken);
+            return;
+        }
+        await cache.SetStringAsync(key, value, cancellationToken);
     }
 }
