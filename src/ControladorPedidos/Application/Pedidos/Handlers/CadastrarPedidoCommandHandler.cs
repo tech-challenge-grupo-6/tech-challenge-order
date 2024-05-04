@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using ControladorPedidos.Application.Clientes.Models;
 using ControladorPedidos.Application.Clientes.Repositories;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Commands;
@@ -13,7 +12,6 @@ using ControladorPedidos.Application.Produtos.Repositories;
 using ControladorPedidos.Application.Shared.Notifications;
 using ControladorPedidos.Infrastructure.Configurations;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Pedidos.Handlers;
 
@@ -24,10 +22,7 @@ public class CadastrarPedidoCommandHandler(IMediator mediator, IPedidoRepository
         Pedido pedido = (Pedido)request;
         try
         {
-            if (!PedidoValidador.IsValid(pedido))
-            {
-                throw new ArgumentException("Pedido inválido");
-            }
+            PedidoValidador.IsValid(pedido);
 
             pedido.Cliente = await clienteRepository.GetById(request.ClienteId) ?? throw new ArgumentException("Cliente não encontrado");
 
