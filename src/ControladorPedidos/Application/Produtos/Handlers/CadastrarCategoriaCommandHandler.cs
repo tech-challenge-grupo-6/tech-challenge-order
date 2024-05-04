@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Models;
@@ -20,10 +19,7 @@ public class CadastrarCategoriaCommandHandler(IMediator mediator, IProdutoReposi
         Categoria categoria = (Categoria)request;
         try
         {
-            if (!CategoriaValidador.IsValid(categoria))
-            {
-                throw new BusinessException("Categoria inválida");
-            }
+            CategoriaValidador.IsValid(categoria);
 
             await repository.Add(categoria);
             await mediator.Publish((CategoriaCriadaNotification)categoria, cancellationToken);

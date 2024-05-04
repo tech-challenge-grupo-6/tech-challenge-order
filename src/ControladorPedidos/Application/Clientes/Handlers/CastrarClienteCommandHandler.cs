@@ -19,10 +19,7 @@ public class CastrarClienteCommandHandler(IMediator mediator, IClienteRepository
         Cliente cliente = (Cliente)request;
         try
         {
-            if (!ClienteValidador.IsValid(cliente))
-            {
-                throw new BusinessException("Cliente inválido");
-            }
+            ClienteValidador.IsValid(cliente);
 
             await repository.Add(cliente);
             await mediator.Publish((ClienteCriadoNotification)cliente, cancellationToken);

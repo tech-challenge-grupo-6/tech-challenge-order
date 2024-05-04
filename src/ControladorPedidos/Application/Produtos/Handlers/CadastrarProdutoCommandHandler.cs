@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Models;
@@ -18,10 +17,8 @@ public class CadastrarProdutoCommandHandler(IMediator mediator, IProdutoReposito
         try
         {
             Produto produto = (Produto)request;
-            if (!ProdutoValidador.IsValid(produto))
-            {
-                throw new BusinessException("Produto inválido");
-            }
+            ProdutoValidador.IsValid(produto);
+
             await produtoRepository.Add(produto);
             string key = $"{cacheConfiguration.ProdutoPrefix}:{produto.Id}";
             string cacheValue = JsonSerializer.Serialize(produto);

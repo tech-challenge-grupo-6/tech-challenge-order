@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Application/Exceptions/NotificationsHandler/" />
-    <Folder Include="Application/Shared/Models/Validators/" />
   </ItemGroup>
 
 </Project>
