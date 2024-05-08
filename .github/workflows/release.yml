@@ -36,9 +36,9 @@ jobs:
 
       - name: Docker Build Controlador Pedidos
         run: |
-          docker build . -f src/ControladorPedidos/Dockerfile -t ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:latest -t ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:${{ github.event.release.tag_name }}
+          docker build . -f src/ControladorPedidos/Dockerfile -t ghcr.io/tech-challenge-grupo-6/controladorpedidos:latest -t ghcr.io/tech-challenge-grupo-6/controladorpedidos:${{ github.event.release.tag_name }}
 
       - name: Docker Push
         run: |
-          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:latest
-          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:${{ github.event.release.tag_name }}
+          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos:latest
+          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos:${{ github.event.release.tag_name }}
