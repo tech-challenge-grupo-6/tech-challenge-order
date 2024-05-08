@@ -1,9 +1,7 @@
 name: Build and Push Docker Image
 
 on:
-  release:
-    types:
-      - published
+  pull_request:
 
 permissions: write-all
 
@@ -14,9 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Docker Login
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Unit Tests
         run: dotnet test tests/ControladorPedido.Tests/ControladorPedido.Tests.csproj --collect:"XPlat Code Coverage" --settings tests/ControladorPedido.Tests/coverlet.runsettings
@@ -38,11 +33,9 @@ jobs:
         run: |
           cat code-coverage-results.md >> $GITHUB_STEP_SUMAMARY
 
-      - name: Docker Build Controlador Pedidos
-        run: |
-          docker build . -f src/ControladorPedidos/Dockerfile -t ghcr.io/tech-challenge-grupo-6/controladorpedidos:latest -t ghcr.io/tech-challenge-grupo-6/controladorpedidos:${{ github.event.release.tag_name }}
-
-      - name: Docker Push
-        run: |
-          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos:latest
-          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos:${{ github.event.release.tag_name }}
+      - name: Adding Code Coverage into PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: "code-coverage-results"
+          recreate: true
+          path: code-coverage-results.md

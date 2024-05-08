@@ -27,6 +27,10 @@ jobs:
           output: both
           thresholds: "80"
 
+      - name: Adding Code Coverage to Summary
+        run: |
+          cat code-coverage-results.md >> $GITHUB_STEP_SUMAMARY
+
   # build-push:
   #   runs-on: ubuntu-latest
   #   needs: tests
