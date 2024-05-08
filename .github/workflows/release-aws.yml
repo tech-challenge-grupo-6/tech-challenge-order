@@ -29,7 +29,7 @@ jobs:
 
       - name: Adding Code Coverage to Summary
         run: |
-          cat code-coverage-results.md >> $GITHUB_STEP_SUMAMARY
+          cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
   # build-push:
   #   runs-on: ubuntu-latest
