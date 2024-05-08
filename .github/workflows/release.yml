@@ -1,0 +1,44 @@
+name: Build and Push Docker Image
+
+on:
+  release:
+    types:
+      - published
+
+permissions: write-all
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Docker Login
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Unit Tests
+        run: dotnet test tests/ControladorPedidos.Tests --collect:"XPlat Code Coverage" --settings tests/coverlet.runsettings
+
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: "**/coverage.cobertura.xml"
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: "80"
+
+      - name: Docker Build Controlador Pedidos
+        run: |
+          docker build . -f src/ControladorPedidos/Dockerfile -t ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:latest -t ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:${{ github.event.release.tag_name }}
+
+      - name: Docker Push
+        run: |
+          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:latest
+          docker push ghcr.io/tech-challenge-grupo-6/controladorpedidos-app:${{ github.event.release.tag_name }}
