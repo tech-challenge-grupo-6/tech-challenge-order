@@ -36,6 +36,11 @@ spec:
               value: "__USER_POOL_ID__"
             - name: AWS__AppClientId
               value: "__CLIENT_ID__"
+            - name: Cache__Configuration
+              valueFrom:
+                secretKeyRef:
+                  name: cache
+                  key: configuration
           ports:
             - containerPort: 5003
           resources:
