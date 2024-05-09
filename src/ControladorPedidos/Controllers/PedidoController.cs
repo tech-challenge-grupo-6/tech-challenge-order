@@ -3,13 +3,14 @@ using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Commands;
 using ControladorPedidos.Application.Pedidos.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControladorPedidos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-// [Authorize]
+[Authorize]
 public class PedidoController(IMediator mediator) : ControllerBase
 {
     /// <summary>

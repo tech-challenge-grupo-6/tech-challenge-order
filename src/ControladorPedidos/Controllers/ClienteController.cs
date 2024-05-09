@@ -10,7 +10,7 @@ namespace ControladorPedidos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-// [Authorize]
+[Authorize]
 public class ClienteController(IMediator mediator) : ControllerBase
 {
     /// <summary>
