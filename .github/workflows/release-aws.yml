@@ -107,7 +107,7 @@ jobs:
       - name: Get Cache Information
         id: cache-configuration
         run: |
-          CACHE_CONFIGURATION=$(aws elasticache describe-cache-clusters --cache-cluster-id controlador-pedidos-cache --show-cache-node-info | jq -r '.CacheClusters[0].CacheNodes[0].Endpoint.Address + ":" + (.CacheClusters[0].CacheNodes[0].Endpoint.Port | tostring)')
+          CACHE_CONFIGURATION=$(aws elasticache describe-cache-clusters --cache-cluster-id controlador-pedidos-cache-2 --show-cache-node-info | jq -r '.CacheClusters[0].CacheNodes[0].Endpoint.Address + ":" + (.CacheClusters[0].CacheNodes[0].Endpoint.Port | tostring)')
           echo "cache-configuration=$CACHE_CONFIGURATION" >> $GITHUB_OUTPUT
 
       - name: Replace tokens in Kubernetes files
