@@ -92,7 +92,9 @@ jobs:
 
       - name: Get RDS instance name
         run: |
-          AWS_RDS_INSTANCE_URL=$(aws rds describe-db-instances --region us-east-1 | jq -r '.DBInstances[0].Endpoint.Address')
+          DB_NAME="controlador_pedidos"
+          DB_INFO=$(aws rds describe-db-instances --region us-east-1 | jq -r --arg DB_NAME "$DB_NAME" '.DBInstances[] | select(.DBName == $DB_NAME)')
+          AWS_RDS_INSTANCE_URL=$(aws rds describe-db-instances --region us-east-1 | jq -r --arg DB_NAME "$DB_NAME" '.DBInstances[] | select(.DBName == $DB_NAME) | .Endpoint.Address')
           echo "AWS_RDS_INSTANCE_URL=$AWS_RDS_INSTANCE_URL" >> $GITHUB_ENV
 
       - name: Get Cognito Information
@@ -104,7 +106,7 @@ jobs:
 
       - name: Get Cache Information
         run: |
-          CACHE_CONFIGURATION=$(aws elasticache describe-cache-clusters --cache-cluster-id controlador-pedidos-cache --show-cache-node-info)
+          CACHE_CONFIGURATION=$(aws elasticache describe-cache-clusters --cache-cluster-id controlador-pedidos-cache --show-cache-node-info | jq -r '.CacheClusters[0].CacheNodes[0].Endpoint.Address + ":" + (.CacheClusters[0].CacheNodes[0].Endpoint.Port | tostring)')
           echo "CACHE_CONFIGURATION=$CACHE_CONFIGURATION" >> $GITHUB_ENV
 
       - name: Replace tokens in Kubernetes files
