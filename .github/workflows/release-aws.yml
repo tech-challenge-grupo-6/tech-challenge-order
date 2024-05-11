@@ -57,7 +57,7 @@ jobs:
 
       - name: Docker Build Controlador Pedidos
         run: |
-          docker build . -f src/ControladorPedidos.App/Dockerfile -t ${{ env.CONTROLADORPEDIDOS_APP_ECR }}:latest
+          docker build . -f src/ControladorPedidos/Dockerfile -t ${{ env.CONTROLADORPEDIDOS_APP_ECR }}:latest
 
       - name: Docker Push
         run: |
