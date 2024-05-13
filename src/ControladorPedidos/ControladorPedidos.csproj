@@ -31,4 +31,8 @@
     <Folder Include="Application/Exceptions/NotificationsHandler/" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ControladorPedidos.BDD.Tests" />
+  </ItemGroup>
+
 </Project>

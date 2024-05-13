@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # VS Code
 .vscode/
+
+# SpecFlow
+*.feature.cs

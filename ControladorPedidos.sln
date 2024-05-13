@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9CBA6027
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControladorPedido.Tests", "tests\ControladorPedido.Tests\ControladorPedido.Tests.csproj", "{7E2568DD-5892-40A7-B018-4EE14FBC8FAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControladorPedidos.BDD.Tests", "tests\ControladorPedidos.BDD.Tests\ControladorPedidos.BDD.Tests.csproj", "{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{7E2568DD-5892-40A7-B018-4EE14FBC8FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E2568DD-5892-40A7-B018-4EE14FBC8FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E2568DD-5892-40A7-B018-4EE14FBC8FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +38,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{453AA43A-649B-4D9D-8187-D1811A87EC85} = {F20D2022-4EBD-4AC5-8B70-27A738B0E6BE}
 		{7E2568DD-5892-40A7-B018-4EE14FBC8FAC} = {9CBA6027-6298-4B75-B9D4-3547FE30BAD8}
+		{D0E18D51-CFC5-4D68-9547-A4D2B9A06E10} = {9CBA6027-6298-4B75-B9D4-3547FE30BAD8}
 	EndGlobalSection
 EndGlobal

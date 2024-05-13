@@ -57,6 +57,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "ControladorPedidos";
 });
 
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,7 +78,7 @@ builder.Services.AddAuthentication(x =>
         {
             // Acessar as propriedades da chave
             Console.WriteLine(key); // Exemplo de acesso a uma propriedade, como o ID da chave
-            // Faça o que for necessário com cada chave...
+                                    // Faça o que for necessário com cada chave...
         }
         // cast the result to be the type expected by IssuerSigningKeyResolver
         return (IEnumerable<SecurityKey>)keys;
@@ -99,6 +100,11 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+if (builder.Environment.IsEnvironment("SUT"))
+    app.MapControllers().AllowAnonymous();
+else
+    app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
