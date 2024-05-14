@@ -11,7 +11,7 @@ using TechTalk.SpecFlow;
 namespace ControladorPedidos.BDD.Tests.Steps;
 
 [Binding]
-public class StepDefinitions(ScenarioContext scenarioContext, WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public class PedidosStepDefinitions(ScenarioContext scenarioContext, WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly ScenarioContext _scenarioContext = scenarioContext;
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
