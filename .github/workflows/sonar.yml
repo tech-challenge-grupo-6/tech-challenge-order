@@ -1,0 +1,30 @@
+name: Sonar Analysis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build and test
+        run: dotnet build src/ControladorPedidos/ControladorPedidos.csproj --configuration Release
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+      - name: SonarQube Scanner
+        uses: SonarSource/sonarqube-scan-action@v1
+        with:
+          projectBaseDir: src/ControladorPedidos
+          token: ${{ secrets.SONAR_TOKEN }}
+          extraProperties: |
+            sonar.host.url=https://sonarcloud.io
+            sonar.organization=tech-challenge-grupo-6
+            sonar.projectKey=controlador-pedidos
+            sonar.sources=.
+            sonar.tests=.
+            sonar.coverage.exclusions=**/*.Tests/**/*
