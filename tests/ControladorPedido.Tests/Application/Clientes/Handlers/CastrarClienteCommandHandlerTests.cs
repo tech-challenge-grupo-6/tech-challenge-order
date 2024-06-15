@@ -4,8 +4,6 @@ using ControladorPedidos.Application.Clientes.Handlers;
 using ControladorPedidos.Application.Clientes.Models;
 using ControladorPedidos.Application.Clientes.Notifications;
 using ControladorPedidos.Application.Clientes.Repositories;
-using ControladorPedidos.Application.Clientes.Validators;
-using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Shared.Notifications;
 using ControladorPedidos.Infrastructure.Configurations;

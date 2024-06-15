@@ -10,7 +10,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Produtos.Handlers;
 
-public class PegarProdutosPorCategoriaQueryHandler(IMediator mediator, IProdutoRepository repository, CacheConfiguration cacheConfiguration, IDistributedCache cache) : IRequestHandler<PegarProdutosPorCategoriaQuery, IEnumerable<PegarProdutoPorCategoriaQuery>>
+public class PegarProdutosPorCategoriaQueryHandler(
+    IMediator mediator,
+    IProdutoRepository repository,
+    CacheConfiguration cacheConfiguration,
+    IDistributedCache cache,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<PegarProdutosPorCategoriaQuery, IEnumerable<PegarProdutoPorCategoriaQuery>>
 {
     public async Task<IEnumerable<PegarProdutoPorCategoriaQuery>> Handle(PegarProdutosPorCategoriaQuery request, CancellationToken cancellationToken)
     {
@@ -28,13 +33,13 @@ public class PegarProdutosPorCategoriaQueryHandler(IMediator mediator, IProdutoR
                     produto = await repository.GetById(id) ?? null!;
                     if (produto is not null)
                     {
-                        cacheValue = JsonSerializer.Serialize(produto);
+                        cacheValue = JsonSerializer.Serialize(produto, jsonSerializerOptions);
                         await mediator.Publish(new CacheNotification(key, cacheValue), cancellationToken);
                     }
                 }
                 else
                 {
-                    produto = JsonSerializer.Deserialize<Produto>(cacheValue)!;
+                    produto = JsonSerializer.Deserialize<Produto>(cacheValue, jsonSerializerOptions)!;
                 }
                 produtos.Add((PegarProdutoPorCategoriaQuery)produto!);
             }

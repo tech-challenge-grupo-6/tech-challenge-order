@@ -1,6 +1,8 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Amazon.SQS;
+using ControladorPedidos.Application.Pedidos.Queue.Listen;
 using ControladorPedidos.Gateways.DependencyInjection;
 using ControladorPedidos.Infrastructure.Configurations;
 using ControladorPedidos.Infrastructure.Database.DependencyInjection;
@@ -91,6 +93,20 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = true
     };
 });
+
+var awsOptions = builder.Configuration.GetAWSOptions();
+builder.Services.AddAWSService<IAmazonSQS>(awsOptions);
+
+var jsonSerializerOptions = new JsonSerializerOptions
+{
+    ReferenceHandler = ReferenceHandler.Preserve,
+    PropertyNameCaseInsensitive = true,
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+};
+
+builder.Services.AddSingleton(jsonSerializerOptions);
+
+builder.Services.AddHostedService<PedidoAtualizadoQueueListener>();
 
 var app = builder.Build();
 
