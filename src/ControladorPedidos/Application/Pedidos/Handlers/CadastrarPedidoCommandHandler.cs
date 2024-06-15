@@ -4,6 +4,8 @@ using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Commands;
 using ControladorPedidos.Application.Pedidos.Models;
 using ControladorPedidos.Application.Pedidos.Notifications;
+using ControladorPedidos.Application.Pedidos.Queue.Models;
+using ControladorPedidos.Application.Pedidos.Queue.Send;
 using ControladorPedidos.Application.Pedidos.Repositories;
 using ControladorPedidos.Application.Pedidos.Validators;
 using ControladorPedidos.Application.Produtos.Models;
@@ -44,6 +46,7 @@ public class CadastrarPedidoCommandHandler(
             string key = $"{cacheConfiguration.PedidoPrefix}:{pedido.Id}";
             string value = JsonSerializer.Serialize(pedido, jsonSerializerOptions);
             await mediator.Publish(new CacheNotification(key, value), cancellationToken);
+            await mediator.Publish(new PedidoCriadoQueueSendMessage((PedidoQueue)pedido), cancellationToken);
             return pedido.Id;
         }
         catch (Exception e)
