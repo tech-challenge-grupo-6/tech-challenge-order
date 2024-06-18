@@ -6,6 +6,7 @@ using ControladorPedidos.Application.Pedidos.Queue.Listen;
 using ControladorPedidos.Gateways.DependencyInjection;
 using ControladorPedidos.Infrastructure.Configurations;
 using ControladorPedidos.Infrastructure.Database.DependencyInjection;
+using ControladorPedidos.Infrastructure.Queue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -49,6 +50,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddRepositories();
+builder.Services.AddSingleton<IQueueService, QueueService>();
+builder.Services.AddSingleton<IQueueStartup, QueueStartup>();
 
 var cacheConfiguration = CacheConfiguration.FromConfiguration(builder.Configuration);
 builder.Services.AddSingleton(cacheConfiguration);
@@ -106,9 +109,12 @@ var jsonSerializerOptions = new JsonSerializerOptions
 
 builder.Services.AddSingleton(jsonSerializerOptions);
 
-builder.Services.AddHostedService<PedidoAtualizadoQueueListener>();
+//builder.Services.AddHostedService<PedidoAtualizadoQueueListener>();
 
 var app = builder.Build();
+
+var queueStartup = app.Services.GetRequiredService<IQueueStartup>();
+await queueStartup.CreateQueuesAsync();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -116,7 +122,7 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-if (builder.Environment.IsEnvironment("SUT"))
+if (builder.Environment.IsEnvironment("SUT") || builder.Environment.IsDevelopment())
     app.MapControllers().AllowAnonymous();
 else
     app.MapControllers();
