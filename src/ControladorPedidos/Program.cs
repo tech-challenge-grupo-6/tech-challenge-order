@@ -109,7 +109,7 @@ var jsonSerializerOptions = new JsonSerializerOptions
 
 builder.Services.AddSingleton(jsonSerializerOptions);
 
-//builder.Services.AddHostedService<PedidoAtualizadoQueueListener>();
+builder.Services.AddHostedService<PedidoAtualizadoQueueListener>();
 
 var app = builder.Build();
 
