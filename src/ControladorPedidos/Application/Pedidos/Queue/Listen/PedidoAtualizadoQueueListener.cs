@@ -11,10 +11,15 @@ namespace ControladorPedidos.Application.Pedidos.Queue.Listen;
 public class PedidoAtualizadoQueueListener(
     ILogger<PedidoAtualizadoQueueListener> logger,
     IMediator mediator,
-    IAmazonSQS amazonSQS,
-    JsonSerializerOptions jsonSerializerOptions
+    IAmazonSQS amazonSQS
 ) : BackgroundService
 {
+    private readonly JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("PedidoAtualizadoQueueListener - Start");
@@ -39,7 +44,6 @@ public class PedidoAtualizadoQueueListener(
                 foreach (var message in receiveMessageResponse.Messages)
                 {
                     logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - Start");
-
                     PedidoQueue pedidoQueue = JsonSerializer.Deserialize<PedidoQueue>(message.Body, jsonSerializerOptions)!;
                     AtualizarPedidoCommand command = (AtualizarPedidoCommand)pedidoQueue;
 
