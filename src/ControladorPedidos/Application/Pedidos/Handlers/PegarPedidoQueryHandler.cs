@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Models;
 using ControladorPedidos.Application.Pedidos.Queries;
@@ -29,7 +30,7 @@ public class PegarPedidoQueryHandler(
             }
             else
             {
-                pedido = await repository.GetById(request.Id) ?? throw new ArgumentException("Pedido não encontrado");
+                pedido = await repository.GetById(request.Id) ?? throw new NotFoundException("Pedido não encontrado");
                 string pedidoValue = JsonSerializer.Serialize(pedido, jsonSerializerOptions);
                 await cache.SetStringAsync(key, pedidoValue, cancellationToken);
             }
