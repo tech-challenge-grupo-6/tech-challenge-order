@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Clientes.Commands;
 using ControladorPedidos.Application.Clientes.Handlers;
 using ControladorPedidos.Application.Clientes.Models;
@@ -17,13 +18,20 @@ public class CastrarClienteCommandHandlerTests
     private readonly IClienteRepository _repository;
     private readonly CacheConfiguration _cacheConfiguration;
     private readonly CastrarClienteCommandHandler _handler;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public CastrarClienteCommandHandlerTests()
     {
         _mediator = Substitute.For<IMediator>();
         _repository = Substitute.For<IClienteRepository>();
         _cacheConfiguration = new CacheConfiguration("Cliente", "Produto", "Categoria", "Pedido", "localhost:6379");
-        _handler = new CastrarClienteCommandHandler(_mediator, _repository, _cacheConfiguration);
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        _handler = new CastrarClienteCommandHandler(_mediator, _repository, _cacheConfiguration, _jsonSerializerOptions);
     }
 
     [Fact]
@@ -50,7 +58,7 @@ public class CastrarClienteCommandHandlerTests
         result.Should().Be(cliente.Id.ToString());
         await _repository.Received(1).Add(Arg.Any<Cliente>());
         await _mediator.Received(1).Publish(Arg.Is(clienteCriadoNotification), Arg.Any<CancellationToken>());
-        var cacheNotification = new CacheNotification($"{_cacheConfiguration.ClientePrefix}:{cliente.Cpf}", JsonSerializer.Serialize(cliente));
+        var cacheNotification = new CacheNotification($"{_cacheConfiguration.ClientePrefix}:{cliente.Cpf}", JsonSerializer.Serialize(cliente, _jsonSerializerOptions));
         await _mediator.Received(1).Publish(Arg.Is(cacheNotification), Arg.Any<CancellationToken>());
     }
 

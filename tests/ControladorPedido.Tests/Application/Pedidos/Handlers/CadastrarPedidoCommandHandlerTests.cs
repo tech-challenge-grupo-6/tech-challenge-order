@@ -1,4 +1,6 @@
-﻿using ControladorPedidos.Application.Clientes.Models;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using ControladorPedidos.Application.Clientes.Models;
 using ControladorPedidos.Application.Clientes.Repositories;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Commands;
@@ -22,6 +24,7 @@ public class CadastrarPedidoCommandHandlerTests
     private readonly IProdutoRepository _produtoRepository;
     private readonly CacheConfiguration _cacheConfiguration;
     private readonly CadastrarPedidoCommandHandler _handler;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public CadastrarPedidoCommandHandlerTests()
     {
@@ -30,13 +33,20 @@ public class CadastrarPedidoCommandHandlerTests
         _clienteRepository = Substitute.For<IClienteRepository>();
         _produtoRepository = Substitute.For<IProdutoRepository>();
         _cacheConfiguration = new CacheConfiguration("Cliente", "Produto", "Categoria", "Pedido", "localhost:6379");
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
         _handler = new CadastrarPedidoCommandHandler(
             _mediator,
             _pedidoRepository,
             _clienteRepository,
             _produtoRepository,
-            _cacheConfiguration
+            _cacheConfiguration,
+            _jsonSerializerOptions
         );
     }
 
