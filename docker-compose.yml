@@ -50,7 +50,9 @@ services:
       - Cache__Configuration=redis:6379
       - ASPNETCORE_ENVIRONMENT=Development
       - Aws__ServiceUrl=http://localstack:4566
-      - Aws__Region=us-east-1
+      - AWS_ACCESS_KEY_ID=xxx
+      - AWS_SECRET_ACCESS_KEY=xxx
+      - Aws__SecretKey=xxx
     networks:
       - controladorpedidos-network
     restart: on-failure
