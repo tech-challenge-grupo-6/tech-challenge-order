@@ -36,6 +36,16 @@ spec:
               value: "__USER_POOL_ID__"
             - name: AWS__AppClientId
               value: "__CLIENT_ID__"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: secret-access-key
             - name: Cache__Configuration
               valueFrom:
                 secretKeyRef:
