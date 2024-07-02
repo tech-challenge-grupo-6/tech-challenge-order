@@ -80,4 +80,34 @@ public class ClienteController(IMediator mediator) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Remove um cliente
+    /// </summary>
+    /// <param name="cpf">CPF do cliente</param>
+    /// <returns>No content.</returns>
+    /// <response code="204">Cliente removido com sucesso.</response>
+    /// <response code="404">Não encontrado.</response>
+    /// <response code="500">Erro interno.</response>
+    [HttpDelete("{cpf}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Delete(string cpf)
+    {
+        try
+        {
+            await mediator.Send(new DeletarClienteCommand(cpf));
+            return NoContent();
+        }
+        catch (NotFoundException e)
+        {
+            await mediator.Publish((ExceptionNotification)e);
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            await mediator.Publish((ExceptionNotification)e);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno");
+        }
+    }
+
 }

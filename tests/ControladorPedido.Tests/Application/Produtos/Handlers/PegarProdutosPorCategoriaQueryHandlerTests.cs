@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Handlers;
 using ControladorPedidos.Application.Produtos.Models;
@@ -22,8 +24,14 @@ public class PegarProdutosPorCategoriaQueryHandlerTests
         var repository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
         var cache = Substitute.For<IDistributedCache>();
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        var handler = new PegarProdutosPorCategoriaQueryHandler(mediator, repository, cacheConfiguration, cache);
+        var handler = new PegarProdutosPorCategoriaQueryHandler(mediator, repository, cacheConfiguration, cache, jsonSerializerOptions);
 
         var request = new PegarProdutosPorCategoriaQuery(Guid.NewGuid());
         var cancellationToken = CancellationToken.None;
@@ -56,8 +64,14 @@ public class PegarProdutosPorCategoriaQueryHandlerTests
         var repository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
         var cache = Substitute.For<IDistributedCache>();
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        var handler = new PegarProdutosPorCategoriaQueryHandler(mediator, repository, cacheConfiguration, cache);
+        var handler = new PegarProdutosPorCategoriaQueryHandler(mediator, repository, cacheConfiguration, cache, jsonSerializerOptions);
 
         var request = new PegarProdutosPorCategoriaQuery(Guid.NewGuid());
         var cancellationToken = CancellationToken.None;

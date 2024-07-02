@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Handlers;
@@ -21,7 +22,13 @@ public class EditarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new EditarProdutoCommand(Guid.NewGuid(), "Teste", Guid.NewGuid(), 20, "Teste", "test.png");
 
         // Act
@@ -37,8 +44,14 @@ public class EditarProdutoCommandHandlerTests
         // Arrange
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
-        var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379"); ;
-        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new EditarProdutoCommand(Guid.NewGuid(), null!, Guid.NewGuid(), 20, "Teste", "test.png");
 
         // Act
@@ -55,7 +68,13 @@ public class EditarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new EditarProdutoCommand(Guid.NewGuid(), "Teste", Guid.NewGuid(), 20, "Teste", "test.png");
         var produto = (Produto)command;
         produtoRepository.Update(Arg.Any<Produto>()).Returns(Task.CompletedTask);
@@ -76,7 +95,13 @@ public class EditarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new EditarProdutoCommand(Guid.NewGuid(), "Teste", Guid.NewGuid(), 20, "Teste", "test.png");
         var produto = (Produto)command;
         produtoRepository.Update(Arg.Any<Produto>()).Returns(Task.CompletedTask);
@@ -95,7 +120,13 @@ public class EditarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new EditarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new EditarProdutoCommand(Guid.NewGuid(), "Teste", Guid.NewGuid(), 20, "Teste", "test.png");
         var exception = new Exception();
         produtoRepository.Update(Arg.Any<Produto>()).Throws(exception);

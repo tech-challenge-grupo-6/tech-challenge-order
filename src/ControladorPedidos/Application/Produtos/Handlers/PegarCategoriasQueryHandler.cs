@@ -10,7 +10,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Produtos.Handlers;
 
-public class PegarCategoriasQueryHandler(IMediator mediator, IProdutoRepository repository, CacheConfiguration cacheConfiguration, IDistributedCache cache) : IRequestHandler<PegarCategoriasQuery, PegarCategoriasQueryResponse>
+public class PegarCategoriasQueryHandler(
+    IMediator mediator,
+    IProdutoRepository repository,
+    CacheConfiguration cacheConfiguration,
+    IDistributedCache cache,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<PegarCategoriasQuery, PegarCategoriasQueryResponse>
 {
     public async Task<PegarCategoriasQueryResponse> Handle(PegarCategoriasQuery request, CancellationToken cancellationToken)
     {
@@ -21,14 +26,14 @@ public class PegarCategoriasQueryHandler(IMediator mediator, IProdutoRepository 
             Dictionary<Guid, Categoria> categorias = [];
             if (!string.IsNullOrEmpty(cacheValue))
             {
-                categorias = JsonSerializer.Deserialize<Dictionary<Guid, Categoria>>(cacheValue) ?? [];
+                categorias = JsonSerializer.Deserialize<Dictionary<Guid, Categoria>>(cacheValue, jsonSerializerOptions) ?? [];
             }
             else
             {
                 categorias = (await repository.GetAllCategorias())
                     .Select(c => new KeyValuePair<Guid, Categoria>(c.Id, c))
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                cacheValue = JsonSerializer.Serialize(categorias);
+                cacheValue = JsonSerializer.Serialize(categorias, jsonSerializerOptions);
                 await mediator.Publish(new CacheNotification(key, cacheValue), cancellationToken);
             }
             return new PegarCategoriasQueryResponse(categorias.Select(c => (PegarCategoriaQueryResponse)c.Value));

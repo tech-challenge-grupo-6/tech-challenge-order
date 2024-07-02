@@ -1,10 +1,11 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Clientes.Repositories;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Commands;
 using ControladorPedidos.Application.Pedidos.Models;
 using ControladorPedidos.Application.Pedidos.Notifications;
+using ControladorPedidos.Application.Pedidos.Queue.Models;
+using ControladorPedidos.Application.Pedidos.Queue.Send;
 using ControladorPedidos.Application.Pedidos.Repositories;
 using ControladorPedidos.Application.Pedidos.Validators;
 using ControladorPedidos.Application.Produtos.Models;
@@ -15,7 +16,13 @@ using MediatR;
 
 namespace ControladorPedidos.Application.Pedidos.Handlers;
 
-public class CadastrarPedidoCommandHandler(IMediator mediator, IPedidoRepository pedidoRepository, IClienteRepository clienteRepository, IProdutoRepository produtoRepository, CacheConfiguration cacheConfiguration) : IRequestHandler<CadastrarPedidoCommand, Guid>
+public class CadastrarPedidoCommandHandler(
+    IMediator mediator,
+    IPedidoRepository pedidoRepository,
+    IClienteRepository clienteRepository,
+    IProdutoRepository produtoRepository,
+    CacheConfiguration cacheConfiguration,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<CadastrarPedidoCommand, Guid>
 {
     public async Task<Guid> Handle(CadastrarPedidoCommand request, CancellationToken cancellationToken)
     {
@@ -37,8 +44,9 @@ public class CadastrarPedidoCommandHandler(IMediator mediator, IPedidoRepository
             await pedidoRepository.Add(pedido);
             await mediator.Publish((PedidoCadastradoNotification)pedido, cancellationToken);
             string key = $"{cacheConfiguration.PedidoPrefix}:{pedido.Id}";
-            string value = JsonSerializer.Serialize(pedido, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve });
+            string value = JsonSerializer.Serialize(pedido, jsonSerializerOptions);
             await mediator.Publish(new CacheNotification(key, value), cancellationToken);
+            await mediator.Publish(new PedidoCriadoQueueSendMessage((PedidoQueue)pedido), cancellationToken);
             return pedido.Id;
         }
         catch (Exception e)

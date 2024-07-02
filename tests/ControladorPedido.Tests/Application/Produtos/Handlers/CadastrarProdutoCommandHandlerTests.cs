@@ -1,4 +1,6 @@
-﻿using ControladorPedidos.Application.Exceptions.Notifications;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Handlers;
 using ControladorPedidos.Application.Produtos.Repositories;
@@ -16,7 +18,13 @@ public class CadastrarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new CadastrarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new CadastrarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new CadastrarProdutoCommand("Teste", Guid.NewGuid(), 20, "Teste", "test.png");
         var cancellationToken = CancellationToken.None;
 
@@ -35,7 +43,13 @@ public class CadastrarProdutoCommandHandlerTests
         var mediator = Substitute.For<IMediator>();
         var produtoRepository = Substitute.For<IProdutoRepository>();
         var cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
-        var handler = new CadastrarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var handler = new CadastrarProdutoCommandHandler(mediator, produtoRepository, cacheConfiguration, jsonSerializerOptions);
         var command = new CadastrarProdutoCommand(null!, Guid.Empty, 20, "Teste", "test.png");
         var cancellationToken = CancellationToken.None;
 

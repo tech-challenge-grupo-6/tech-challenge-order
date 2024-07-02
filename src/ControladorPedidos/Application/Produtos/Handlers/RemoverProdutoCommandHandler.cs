@@ -10,7 +10,10 @@ using MediatR;
 
 namespace ControladorPedidos.Application.Produtos.Handlers;
 
-public class RemoverProdutoCommandHandler(IMediator mediator, IProdutoRepository produtoRepository, CacheConfiguration cacheConfiguration) : IRequestHandler<RemoverProdutoCommand, Unit>
+public class RemoverProdutoCommandHandler(
+    IMediator mediator,
+    IProdutoRepository produtoRepository,
+    CacheConfiguration cacheConfiguration) : IRequestHandler<RemoverProdutoCommand, Unit>
 {
     public async Task<Unit> Handle(RemoverProdutoCommand request, CancellationToken cancellationToken)
     {

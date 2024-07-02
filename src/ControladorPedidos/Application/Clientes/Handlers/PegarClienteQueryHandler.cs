@@ -11,7 +11,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Clientes.Handlers;
 
-public class PegarClienteQueryHandler(IMediator mediator, IClienteRepository repository, IDistributedCache cache, CacheConfiguration cacheConfiguration) : IRequestHandler<PegarClientePorCpfQuery, PegarClientePorCpfQueryResponse>
+public class PegarClienteQueryHandler(
+    IMediator mediator,
+    IClienteRepository repository,
+    IDistributedCache cache,
+    CacheConfiguration cacheConfiguration,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<PegarClientePorCpfQuery, PegarClientePorCpfQueryResponse>
 {
     public async Task<PegarClientePorCpfQueryResponse> Handle(PegarClientePorCpfQuery request, CancellationToken cancellationToken)
     {
@@ -22,12 +27,12 @@ public class PegarClienteQueryHandler(IMediator mediator, IClienteRepository rep
             Cliente cliente = null!;
             if (!string.IsNullOrEmpty(cacheValue))
             {
-                cliente = JsonSerializer.Deserialize<Cliente>(cacheValue) ?? throw new NotFoundException("Cache cliente inválido");
+                cliente = JsonSerializer.Deserialize<Cliente>(cacheValue, jsonSerializerOptions) ?? throw new NotFoundException("Cache cliente inválido");
             }
             else
             {
                 cliente = await repository.GetByCpf(request.Cpf) ?? throw new NotFoundException("Cliente não encontrado");
-                cacheValue = JsonSerializer.Serialize(cliente);
+                cacheValue = JsonSerializer.Serialize(cliente, jsonSerializerOptions);
                 await mediator.Publish(new CacheNotification(key, cacheValue), cancellationToken);
             }
             return (PegarClientePorCpfQueryResponse)cliente;

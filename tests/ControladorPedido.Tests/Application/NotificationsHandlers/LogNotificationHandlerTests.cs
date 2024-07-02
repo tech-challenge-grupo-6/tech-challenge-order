@@ -1,6 +1,6 @@
 ﻿using ControladorPedidos.Application.Clientes.Notifications;
 using ControladorPedidos.Application.Exceptions.Notifications;
-using ControladorPedidos.Application.NotificationHandlers;
+using ControladorPedidos.Application.NotificationsHandlers;
 using ControladorPedidos.Application.Pedidos.Notifications;
 using ControladorPedidos.Application.Produtos.Notifications;
 using Microsoft.Extensions.Logging;

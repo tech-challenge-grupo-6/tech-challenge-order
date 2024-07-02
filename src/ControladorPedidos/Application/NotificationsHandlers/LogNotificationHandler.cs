@@ -4,7 +4,7 @@ using ControladorPedidos.Application.Pedidos.Notifications;
 using ControladorPedidos.Application.Produtos.Notifications;
 using MediatR;
 
-namespace ControladorPedidos.Application.NotificationHandlers;
+namespace ControladorPedidos.Application.NotificationsHandlers;
 
 public class LogNotificationHandler(ILogger<LogNotificationHandler> logger)
     : INotificationHandler<ExceptionNotification>,

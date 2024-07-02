@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Handlers;
 using ControladorPedidos.Application.Produtos.Models;
@@ -19,6 +20,7 @@ public class PegarCategoriasQueryHandlerTests
     private readonly CacheConfiguration _cacheConfiguration;
     private readonly IDistributedCache _cache;
     private readonly PegarCategoriasQueryHandler _handler;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public PegarCategoriasQueryHandlerTests()
     {
@@ -26,7 +28,13 @@ public class PegarCategoriasQueryHandlerTests
         _repository = Substitute.For<IProdutoRepository>();
         _cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
         _cache = Substitute.For<IDistributedCache>();
-        _handler = new PegarCategoriasQueryHandler(_mediator, _repository, _cacheConfiguration, _cache);
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        _handler = new PegarCategoriasQueryHandler(_mediator, _repository, _cacheConfiguration, _cache, _jsonSerializerOptions);
     }
 
     [Fact]

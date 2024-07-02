@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Handlers;
 using ControladorPedidos.Application.Pedidos.Models;
@@ -23,8 +24,14 @@ public class PegarPedidoQueryHandlerTests
         var repository = Substitute.For<IPedidoRepository>();
         var cacheConfiguration = new CacheConfiguration("Cliente", "Produto", "Categoria", "Pedido", "localhost:6379");
         var cache = Substitute.For<IDistributedCache>();
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache);
+        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache, jsonSerializerOptions);
         var pedidoId = Guid.NewGuid();
         var query = new PegarPedidoQuery(pedidoId);
         var cachedPedido = new Pedido { Id = pedidoId, ClienteId = Guid.NewGuid(), Produtos = [new Produto { Id = Guid.NewGuid() }], Status = Status.Criado, ValorTotal = 100 };
@@ -48,8 +55,14 @@ public class PegarPedidoQueryHandlerTests
         var repository = Substitute.For<IPedidoRepository>();
         var cacheConfiguration = new CacheConfiguration("Cliente", "Produto", "Categoria", "Pedido", "localhost:6379");
         var cache = Substitute.For<IDistributedCache>();
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache);
+        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache, jsonSerializerOptions);
 
         var pedidoId = Guid.NewGuid();
         var query = new PegarPedidoQuery(pedidoId);
@@ -73,8 +86,14 @@ public class PegarPedidoQueryHandlerTests
         var repository = Substitute.For<IPedidoRepository>();
         var cacheConfiguration = new CacheConfiguration("Cliente", "Produto", "Categoria", "Pedido", "localhost:6379");
         var cache = Substitute.For<IDistributedCache>();
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache);
+        var handler = new PegarPedidoQueryHandler(mediator, repository, cacheConfiguration, cache, jsonSerializerOptions);
 
         var pedidoId = Guid.NewGuid();
         var query = new PegarPedidoQuery(pedidoId);

@@ -49,3 +49,14 @@ A lanchonete de bairro, devido ao seu sucesso crescente, está expandindo suas o
 ### Categoria de Produto
 
 - Nome
+
+## Rodando relatório OWASP ZAP
+- Rode o docker-compose file:
+```bash
+docker compose up --build
+```
+- Rode o container scan do OWASP ZAP:
+```bash
+docker run --name zap --network host -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable zap-api-scan.py -t http://localhost:5003/swagger/v1/swagger.json -f openapi -r report.html
+```
+Esse comando irá gerar um relatório na pasta onde o comando foi executado.
