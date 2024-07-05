@@ -10,7 +10,7 @@ namespace ControladorPedidos.Application.Pedidos.Queue.Listen;
 
 public class PedidoAtualizadoQueueListener(
     ILogger<PedidoAtualizadoQueueListener> logger,
-    IMediator mediator,
+    IServiceProvider serviceProvider,
     IAmazonSQS amazonSQS
 ) : BackgroundService
 {
@@ -23,7 +23,8 @@ public class PedidoAtualizadoQueueListener(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("PedidoAtualizadoQueueListener - Start");
-
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         try
         {
             var queueUrlResponse = await amazonSQS.GetQueueUrlAsync(QueueConstants.PedidoAtualizado, stoppingToken);
@@ -43,21 +44,27 @@ public class PedidoAtualizadoQueueListener(
                 }
                 foreach (var message in receiveMessageResponse.Messages)
                 {
-                    logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - Start");
-                    PedidoQueue pedidoQueue = JsonSerializer.Deserialize<PedidoQueue>(message.Body, jsonSerializerOptions)!;
-                    AtualizarPedidoCommand command = (AtualizarPedidoCommand)pedidoQueue;
+                    try
+                    {
+                        logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - Start");
+                        PedidoQueue pedidoQueue = JsonSerializer.Deserialize<PedidoQueue>(message.Body, jsonSerializerOptions)!;
+                        AtualizarPedidoCommand command = (AtualizarPedidoCommand)pedidoQueue;
+                        await mediator.Send(command, stoppingToken);
 
-                    await mediator.Send(command, stoppingToken);
+                        logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - End");
 
-                    logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - End");
-
-                    await amazonSQS.DeleteMessageAsync(queueUrlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+                        await amazonSQS.DeleteMessageAsync(queueUrlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "PedidoAtualizadoQueueListener - Error");
+                    }
                 }
             }
         }
         catch (Exception e)
         {
-            logger.LogError(e, "PedidoAtualizadoQueueListener - Error");
+            logger.LogError(e, "Fatal - PedidoAtualizadoQueueListener - Error");
         }
     }
 }
