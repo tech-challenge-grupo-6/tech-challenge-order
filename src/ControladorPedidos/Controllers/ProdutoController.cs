@@ -1,4 +1,5 @@
-﻿using ControladorPedidos.Application.Exceptions.Models;
+﻿using System.Text.RegularExpressions;
+using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Queries;
@@ -88,6 +89,10 @@ public class ProdutoController(IMediator mediator) : ControllerBase
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(categoria.Nome) || !Regex.IsMatch(categoria.Nome, @"^[a-zA-Z0-9\s]+$"))
+            {
+                return BadRequest("Nome da categoria inválido.");
+            }
             var id = await mediator.Send(categoria);
             return Created($"/Categoria/{id}", new { id = id });
         }

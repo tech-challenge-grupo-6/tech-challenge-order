@@ -17,5 +17,6 @@ public class ClienteMapping : IEntityTypeConfiguration<Cliente>
         builder.Property(x => x.CriadoEm).IsRequired();
         builder.Property(x => x.AtualizadoEm).IsRequired(false);
         builder.HasMany(x => x.Pedidos).WithOne(x => x.Cliente).HasForeignKey(x => x.ClienteId);
+        builder.Property(x => x.Excluido).IsRequired().HasDefaultValue(false);
     }
 }

@@ -11,7 +11,11 @@ using MediatR;
 
 namespace ControladorPedidos.Application.Produtos.Handlers;
 
-public class EditarProdutoCommandHandler(IMediator mediator, IProdutoRepository produtoRepository, CacheConfiguration cacheConfiguration) : IRequestHandler<EditarProdutoCommand, Unit>
+public class EditarProdutoCommandHandler(
+    IMediator mediator,
+    IProdutoRepository produtoRepository,
+    CacheConfiguration cacheConfiguration,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<EditarProdutoCommand, Unit>
 {
     public async Task<Unit> Handle(EditarProdutoCommand request, CancellationToken cancellationToken)
     {
@@ -22,7 +26,7 @@ public class EditarProdutoCommandHandler(IMediator mediator, IProdutoRepository 
 
             await produtoRepository.Update(produto);
             string key = $"{cacheConfiguration.ProdutoPrefix}:{produto.Id}";
-            string cacheValue = JsonSerializer.Serialize(produto);
+            string cacheValue = JsonSerializer.Serialize(produto, jsonSerializerOptions);
             await mediator.Publish(new CacheNotification(key, cacheValue), cancellationToken);
             await mediator.Publish((ProdutoEditadoNotification)produto, cancellationToken);
             return Unit.Value;

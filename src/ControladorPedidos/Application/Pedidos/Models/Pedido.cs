@@ -11,6 +11,8 @@ public class Pedido : EntityBase
     public Status Status { get; set; } = Status.Criado;
     public virtual ICollection<Produto> Produtos { get; set; } = null!;
     public double ValorTotal { get; set; }
+    public bool Pago { get; set; } = false;
+    public bool Excluido { get; set; } = false;
 
     public double CalcularValorTotal()
     {

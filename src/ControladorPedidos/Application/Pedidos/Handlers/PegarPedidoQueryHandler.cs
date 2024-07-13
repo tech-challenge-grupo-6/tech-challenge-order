@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+using ControladorPedidos.Application.Exceptions.Models;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Pedidos.Models;
 using ControladorPedidos.Application.Pedidos.Queries;
@@ -10,7 +10,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Pedidos.Handlers;
 
-public class PegarPedidoQueryHandler(IMediator mediator, IPedidoRepository repository, CacheConfiguration cacheConfiguration, IDistributedCache cache) : IRequestHandler<PegarPedidoQuery, PegarPedidoQueryResponse>
+public class PegarPedidoQueryHandler(
+    IMediator mediator,
+    IPedidoRepository repository,
+    CacheConfiguration cacheConfiguration,
+    IDistributedCache cache,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<PegarPedidoQuery, PegarPedidoQueryResponse>
 {
     public async Task<PegarPedidoQueryResponse> Handle(PegarPedidoQuery request, CancellationToken cancellationToken)
     {
@@ -21,12 +26,12 @@ public class PegarPedidoQueryHandler(IMediator mediator, IPedidoRepository repos
             Pedido pedido = null!;
             if (!string.IsNullOrWhiteSpace(value))
             {
-                pedido = JsonSerializer.Deserialize<Pedido>(value, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve })!;
+                pedido = JsonSerializer.Deserialize<Pedido>(value, jsonSerializerOptions)!;
             }
             else
             {
-                pedido = await repository.GetById(request.Id) ?? throw new ArgumentException("Pedido não encontrado");
-                string pedidoValue = JsonSerializer.Serialize(pedido);
+                pedido = await repository.GetById(request.Id) ?? throw new NotFoundException("Pedido não encontrado");
+                string pedidoValue = JsonSerializer.Serialize(pedido, jsonSerializerOptions);
                 await cache.SetStringAsync(key, pedidoValue, cancellationToken);
             }
 

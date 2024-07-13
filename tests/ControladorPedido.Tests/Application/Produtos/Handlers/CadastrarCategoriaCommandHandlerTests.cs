@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ControladorPedidos.Application.Exceptions.Notifications;
 using ControladorPedidos.Application.Produtos.Commands;
 using ControladorPedidos.Application.Produtos.Handlers;
@@ -20,6 +21,7 @@ public class CadastrarCategoriaCommandHandlerTests
     private readonly CacheConfiguration _cacheConfiguration;
     private readonly IDistributedCache _cache;
     private readonly CadastrarCategoriaCommandHandler _handler;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public CadastrarCategoriaCommandHandlerTests()
     {
@@ -27,7 +29,13 @@ public class CadastrarCategoriaCommandHandlerTests
         _repository = Substitute.For<IProdutoRepository>();
         _cacheConfiguration = new CacheConfiguration("Client", "Produto", "Categoria", "Pedido", "localhost:6379");
         _cache = Substitute.For<IDistributedCache>();
-        _handler = new CadastrarCategoriaCommandHandler(_mediator, _repository, _cacheConfiguration, _cache);
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        _handler = new CadastrarCategoriaCommandHandler(_mediator, _repository, _cacheConfiguration, _cache, _jsonSerializerOptions);
     }
 
     [Fact]
