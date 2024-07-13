@@ -14,4 +14,13 @@ public record AtualizarPedidoCommand(string Id, Status Status, bool Pago) : IReq
             pedidoQueue.Pago
         );
     }
+
+    public static explicit operator AtualizarPedidoCommand(PedidoCozinhaQueue pedidoCozinhaQueue)
+    {
+        return new AtualizarPedidoCommand(
+            pedidoCozinhaQueue.OrderId,
+            (Status)pedidoCozinhaQueue.Status,
+            pedidoCozinhaQueue.Status > 0
+        );
+    }
 }

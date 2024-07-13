@@ -27,7 +27,7 @@ public class PedidoControllerTests
         // Arrange
         var id = Guid.NewGuid();
         var query = new PegarPedidoQuery(id);
-        var response = new PegarPedidoQueryResponse(id, Guid.NewGuid(), Status.Criado, [Guid.NewGuid()], 10);
+        var response = new PegarPedidoQueryResponse(id, Guid.NewGuid(), Status.Criado, [Guid.NewGuid()], 10, false);
         _mediator.Send(query).Returns(response);
 
         // Act
