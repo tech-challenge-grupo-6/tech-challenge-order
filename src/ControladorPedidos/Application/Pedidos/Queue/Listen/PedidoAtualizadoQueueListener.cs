@@ -33,16 +33,26 @@ public class PedidoAtualizadoQueueListener(
                 QueueUrl = queueUrlResponse.QueueUrl
             };
 
+            var queueCozinhaUrl = await amazonSQS.GetQueueUrlAsync(QueueConstants.PedidoCozinha, stoppingToken);
+            var receiveCozinhaRequest = new ReceiveMessageRequest
+            {
+                QueueUrl = queueCozinhaUrl.QueueUrl
+            };
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                var receiveMessageResponse = await amazonSQS.ReceiveMessageAsync(receiveMessageRequest, stoppingToken);
-                if (receiveMessageResponse.Messages.Count == 0)
+                var receiveMessageAtualizacaoResponse = await amazonSQS.ReceiveMessageAsync(receiveMessageRequest, stoppingToken);
+                var receiveMessageCozinhaResponse = await amazonSQS.ReceiveMessageAsync(receiveCozinhaRequest, stoppingToken);
+                List<Message> messages = [.. receiveMessageAtualizacaoResponse.Messages, .. receiveMessageCozinhaResponse.Messages];
+
+                if (messages.Count == 0)
                 {
                     logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - No messages");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                     continue;
                 }
-                foreach (var message in receiveMessageResponse.Messages)
+
+                foreach (var message in messages)
                 {
                     try
                     {
