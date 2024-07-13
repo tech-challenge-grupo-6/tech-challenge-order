@@ -12,7 +12,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ControladorPedidos.Application.Produtos.Handlers;
 
-public class CadastrarCategoriaCommandHandler(IMediator mediator, IProdutoRepository repository, CacheConfiguration cacheConfiguration, IDistributedCache cache) : IRequestHandler<CadastrarCategoriaCommand, string>
+public class CadastrarCategoriaCommandHandler(
+    IMediator mediator,
+    IProdutoRepository repository,
+    CacheConfiguration cacheConfiguration,
+    IDistributedCache cache,
+    JsonSerializerOptions jsonSerializerOptions) : IRequestHandler<CadastrarCategoriaCommand, string>
 {
     public async Task<string> Handle(CadastrarCategoriaCommand request, CancellationToken cancellationToken)
     {
@@ -28,10 +33,10 @@ public class CadastrarCategoriaCommandHandler(IMediator mediator, IProdutoReposi
             Dictionary<Guid, Categoria> categorias = [];
             if (!string.IsNullOrWhiteSpace(cacheCategorias))
             {
-                categorias = JsonSerializer.Deserialize<Dictionary<Guid, Categoria>>(cacheCategorias) ?? [];
+                categorias = JsonSerializer.Deserialize<Dictionary<Guid, Categoria>>(cacheCategorias, jsonSerializerOptions) ?? [];
             }
             categorias[categoria.Id] = categoria;
-            cacheCategorias = JsonSerializer.Serialize(categorias);
+            cacheCategorias = JsonSerializer.Serialize(categorias, jsonSerializerOptions);
             await mediator.Publish(new CacheNotification(cacheConfiguration.CategoriaPrefix, cacheCategorias), cancellationToken);
 
             return categoria.Id.ToString();

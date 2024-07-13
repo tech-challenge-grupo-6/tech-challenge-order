@@ -188,7 +188,7 @@ public class ProdutoControllerTests
         var result = await controller.Post(categoriaDto);
 
         // Assert
-        result.Should().BeOfType<CreatedResult>();
+        result.Should().BeOfType<ObjectResult>();
     }
 
     [Fact]
@@ -199,7 +199,7 @@ public class ProdutoControllerTests
         var controller = new ProdutoController(mediator);
         var categoriaDto = Arg.Any<CadastrarCategoriaCommand>();
 
-        mediator.Send(categoriaDto).Throws(new ArgumentException("Invalid data")); // Set up the mock behavior
+        mediator.Send(categoriaDto).Throws(new ArgumentException("Erro interno")); // Set up the mock behavior
 
         // Act
         var result = await controller.Post(categoriaDto);
@@ -207,7 +207,7 @@ public class ProdutoControllerTests
         // Assert
         result.Should().BeOfType<ObjectResult>();
         var badRequestObjectResult = (ObjectResult)result;
-        badRequestObjectResult.Value.Should().Be("Invalid data");
+        badRequestObjectResult.Value.Should().Be("Erro interno");
     }
 
     [Fact]

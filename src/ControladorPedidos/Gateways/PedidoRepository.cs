@@ -9,17 +9,29 @@ public class PedidoRepository(DatabaseContext dbContext) : IPedidoRepository
 {
     public async Task<IEnumerable<Pedido?>> GetAll()
     {
-        return await dbContext.Pedidos.Include(p => p.Produtos).ToListAsync();
+        return await dbContext
+            .Pedidos
+            .Include(p => p.Produtos)
+            .Where(p => p.Excluido == false)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Pedido?>> GetByStatus(Status status)
     {
-        return await dbContext.Pedidos.Where(p => p.Status == status).ToListAsync();
+        return await dbContext
+            .Pedidos
+            .Where(p => p.Status == status)
+            .Where(p => p.Excluido == false)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Pedido?>> GetByCliente(Guid clienteId)
     {
-        return await dbContext.Pedidos.Where(p => p.ClienteId == clienteId).ToListAsync();
+        return await dbContext
+            .Pedidos
+            .Where(p => p.ClienteId == clienteId)
+            .Where(p => p.Excluido == false)
+            .ToListAsync();
     }
 
     public async Task<Pedido?> GetById(Guid id)
@@ -27,6 +39,7 @@ public class PedidoRepository(DatabaseContext dbContext) : IPedidoRepository
         return await dbContext
           .Pedidos
           .Include(p => p.Produtos)
+          .Where(p => p.Excluido == false)
           .FirstOrDefaultAsync(p => p.Id == id);
     }
 
