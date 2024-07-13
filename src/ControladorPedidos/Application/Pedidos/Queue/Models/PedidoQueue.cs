@@ -14,3 +14,5 @@ public record PedidoQueue(string Id, Status Status, string ClienteId, ProdutoQue
     public static explicit operator PedidoQueue(Pedido pedido) =>
         new(pedido.Id.ToString(), pedido.Status, pedido.ClienteId.ToString()!, pedido.Produtos.Select(p => (ProdutoQueue)p).ToArray(), pedido.ValorTotal, pedido.Pago);
 }
+
+public record PedidoCozinhaQueue(string OrderId, int Status);
