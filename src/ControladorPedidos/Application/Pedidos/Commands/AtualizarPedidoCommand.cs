@@ -20,7 +20,7 @@ public record AtualizarPedidoCommand(string Id, Status Status, bool Pago) : IReq
         return new AtualizarPedidoCommand(
             pedidoCozinhaQueue.OrderId,
             (Status)pedidoCozinhaQueue.Status,
-            true
+            pedidoCozinhaQueue.Status > 0
         );
     }
 }
