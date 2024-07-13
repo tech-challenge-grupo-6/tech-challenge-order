@@ -137,7 +137,7 @@ jobs:
         run: |
           kubectl delete secret generic aws --ignore-not-found
           kubectl create secret generic aws \
-            --from-literal=access-key-id=${{ secrets.AWS_ACCESS_KEY_ID }}
+            --from-literal=access-key-id=${{ secrets.AWS_ACCESS_KEY_ID }} \
             --from-literal=secret-access-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Kubernetes Apply
