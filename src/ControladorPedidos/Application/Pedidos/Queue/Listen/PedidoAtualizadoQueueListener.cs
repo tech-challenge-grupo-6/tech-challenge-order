@@ -43,16 +43,15 @@ public class PedidoAtualizadoQueueListener(
             {
                 var receiveMessageAtualizacaoResponse = await amazonSQS.ReceiveMessageAsync(receiveMessageRequest, stoppingToken);
                 var receiveMessageCozinhaResponse = await amazonSQS.ReceiveMessageAsync(receiveCozinhaRequest, stoppingToken);
-                List<Message> messages = [.. receiveMessageAtualizacaoResponse.Messages, .. receiveMessageCozinhaResponse.Messages];
 
-                if (messages.Count == 0)
+                if (receiveMessageAtualizacaoResponse.Messages.Count == 0 && receiveMessageCozinhaResponse.Messages.Count == 0)
                 {
-                    logger.LogInformation("PedidoAtualizadoQueueListener - ReceiveMessageAsync - No messages");
+                    logger.LogInformation("PedidoAtualizadoQueueListener/PedidoCozinhaQueueListener - ReceiveMessageAsync - No messages");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                     continue;
                 }
 
-                foreach (var message in messages)
+                foreach (var message in receiveMessageAtualizacaoResponse.Messages)
                 {
                     try
                     {
@@ -70,6 +69,27 @@ public class PedidoAtualizadoQueueListener(
                         logger.LogError(e, "PedidoAtualizadoQueueListener - Error");
                     }
                 }
+
+                foreach (var message in receiveMessageCozinhaResponse.Messages)
+                {
+                    try
+                    {
+                        logger.LogInformation("PedidoCozinhaQueueListener - ReceiveMessageAsync - Start");
+                        PedidoCozinhaQueue pedidoQueue = JsonSerializer.Deserialize<PedidoCozinhaQueue>(message.Body, jsonSerializerOptions)!;
+                        AtualizarPedidoCommand command = (AtualizarPedidoCommand)pedidoQueue;
+                        await mediator.Send(command, stoppingToken);
+
+                        logger.LogInformation("PedidoCozinhaQueueListener - ReceiveMessageAsync - End");
+
+                        await amazonSQS.DeleteMessageAsync(queueUrlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "PedidoCozinhaQueueListener - Error");
+                    }
+                }
+
+
             }
         }
         catch (Exception e)
